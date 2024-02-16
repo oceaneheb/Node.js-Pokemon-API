@@ -1,5 +1,7 @@
-//Récupérer le paquet Express dans le paquet node_modules
+//Récupérer le paquet Express et Morgan dans le paquet node_modules
 const express = require('express') 
+const morgan = require('morgan')
+const favicon = require('serve-favicon')
 // const helper = require('./helper.js')
 const { success } = require('./helper.js') //Récupérer uniquement la méthode success et pas le module helper complet
 
@@ -11,13 +13,18 @@ const app = express()
 //Définir le port sur lequel on démarre l'API Rest
 const port = 3000 
 
-//CREER UN MIDDLEWARE
-app.use((req, res, next) => {
-    console.log(`URL : ${req.url}`)
-    next()
-})
+//------------ CREER UN MIDDLEWARE ------------------------------------
+// app.use((req, res, next) => {
+//     console.log(`URL : ${req.url}`)
+//     next()
+// })
 
-// POINTS DE TERMINAISON -> routes du projet
+app
+    .use(favicon(__dirname + '/favicon.ico'))
+    .use(morgan('dev'))
+
+
+// ------------- POINTS DE TERMINAISON -> routes du projet ------------
 
 app.get('/', (req, res) => res.send('Hello again Express 2 !')) 
 
@@ -28,8 +35,8 @@ app.get('/api/pokemons/:id', (req, res) => {
     // res.send(`Vous avez demandé le pokemon ${pokemon.name}`)
     const message = 'Un pokémon a bien été trouvé'
     // res.json(pokemon)
-    // res.json(helper.success(message, pokemon)) //Si on utilise la ligne 3
-    res.json(success(message, pokemon)) //Si on utilise la ligne 4
+    // res.json(helper.success(message, pokemon))
+    res.json(success(message, pokemon))
 })
 
 //Afficher nombre total de Pokemons dans l'API
@@ -42,6 +49,10 @@ app.get('/api/pokemons', (req, res) => {
     const message = 'La liste des pokemons a bien été retournée'
     res.json(success(message, pokemons))
 })
+
+
+
+// -------------------------------------------------------------------
 
 app.listen(port, () => console.log(`Notre application Node est démarée sur : http://localhost:${port}`)) //Démarrer l'API sur le port 3000 et afficher un message dans la ligne de commande
 
